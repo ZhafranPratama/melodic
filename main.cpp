@@ -5,5 +5,6 @@ using namespace std;
 int main(){
     
     testHeader();
+    testBranchGit();
     return 0;
 }
