@@ -47,5 +47,6 @@ struct songList {
 };
 
 void testHeader();
+void testBranchGit();
 
 #endif
