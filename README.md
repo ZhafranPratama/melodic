@@ -1,6 +1,6 @@
-### Melodic
+# Melodic
 
-# Cara menjalankan program:
+### Cara menjalankan program:
 1. Build project dengan:
 g++ *.cpp -o melodic
 2. Jalankan project dengan:
