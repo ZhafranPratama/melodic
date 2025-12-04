@@ -59,5 +59,7 @@ void addUser(userList &L, adrUser p);
 void addPlaylist(adrUser &p, adrPlaylist q);
 adrSong createElemenSong(string artist, string title, string genre, int duration);
 void createListSong(songList &L);
-void addSong(songList &L, adrSong p) ;
+void addSong(songList &L, adrSong p);
+adrSong searchSongByName(songList L, string title);
+void deleteSongByTitle(songList &L, string title);
 #endif
