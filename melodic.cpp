@@ -67,3 +67,22 @@ void addPlaylist(adrUser &p, adrPlaylist q){
     r->next = q;
     q->prev = r;
 }
+
+adrSong createElemenSong(string artist, string title, string genre, int duration){
+adrSong q;
+    q = new elmSong;
+
+    q->artist= artist;
+    q->title = title;
+    q-> genre = genre;
+    q-> duration = duration;
+    q->next = nullptr;
+    q->prev = nullptr;
+
+    return q;
+}
+
+void createListSong(songList &L){
+    L.first = nullptr;
+    L.last = nullptr;
+}
