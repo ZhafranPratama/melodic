@@ -86,3 +86,14 @@ void createListSong(songList &L){
     L.first = nullptr;
     L.last = nullptr;
 }
+
+void addSong(songList &L, adrSong p) {
+    if (L.first == nullptr) {          
+        L.first = p;
+        L.last = p;
+    } else {                           
+        L.last->next = p;
+        p->prev = L.last;
+        L.last = p;
+    }
+}
