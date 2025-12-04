@@ -60,6 +60,10 @@ void addPlaylist(adrUser &p, adrPlaylist q);
 adrSong createElemenSong(string artist, string title, string genre, int duration);
 void createListSong(songList &L);
 void addSong(songList &L, adrSong p);
-adrSong searchSongByName(songList L, string title);
-void deleteSongByTitle(songList &L, string title);
+
+//MENGHAPUS LAGU 
+adrSong searchSongByTitle(songList L, string title);
+void deleteSongFromList(songList &L, adrSong p);
+void deleteSongInAllPlaylists(userList &L, adrSong song);
+void deleteSongByTitle(userList &L, songList &S, string title);
 #endif

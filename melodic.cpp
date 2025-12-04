@@ -98,7 +98,8 @@ void addSong(songList &L, adrSong p) {
     }
 }
 
-adrSong searchSongByName(songList L, string title) {
+adrSong searchSongByTitle(songList L, string title) {
+    // MENCARI LAGU BERDASARKAN TITLE
     adrSong p = L.first;
 
     while (p != nullptr) {
@@ -110,35 +111,72 @@ adrSong searchSongByName(songList L, string title) {
     return nullptr;
 }
 
-void deleteSongByName(songList &L, string title) {
-    adrSong p = searchSongByName(L, title);
-
-    if (p == nullptr) {
-        cout << "Lagu " << title << "tidak ditemukan!\n";
-        return;
-    }
+void deleteSongFromList(songList &L, adrSong p) {
+    // MENGHAPUS LAGU DARI LIST LAGU 
+    if (p == nullptr) 
+    return ;
 
     if (p == L.first && p == L.last) {
         L.first = nullptr;
         L.last = nullptr;
-    }
-  
-    else if (p == L.first) {
+    } else if (p == L.first) {
         L.first = p->next;
         L.first->prev = nullptr;
-    }
-    
-    else if (p == L.last) {
+    } else if (p == L.last) {
         L.last = p->prev;
         L.last->next = nullptr;
-    }
-    
-    else {
+    } else {
         p->prev->next = p->next;
         p->next->prev = p->prev;
     }
-
-    delete p;
-
-    cout << "Lagu " << title << "berhasil dihapus!\n";
 }
+void deleteSongInAllPlaylists(userList &L, adrSong song) {
+    // MENGHAPUS LAGU TERTENTU DARI SEMUA PLAYLIST, DARI SEMUA USER
+    adrUser u = L.first;         
+    adrPlaylist p;               
+    adrRelation r;               
+    adrRelation q;               
+
+    while (u != nullptr) {
+        p = u->firstPlaylist;    
+
+        while (p != nullptr) {
+            r = p->firstSong;    
+
+            while (r != nullptr) {
+                q = r;           
+                r = r->next;
+
+                if (q->nextSong == song) {
+                    if (q == p->firstSong && q->next == nullptr) {
+                        p->firstSong = nullptr;
+                    } else if (q == p->firstSong) {
+                        p->firstSong = q->next;
+                        p->firstSong->prev = nullptr;
+                    }else {
+                        q->prev->next = q->next;
+                        if (q->next != nullptr) {
+                            q->next->prev = q->prev;
+                        }
+                    }
+                }
+            }
+            p = p->next;   
+        }
+        u = u->next;       
+    }
+}
+
+void deleteSongByTitle(userList &L, songList &S, string title) {
+    //MENCARI LAGU, DI HAPUS DARI PLAYLIST, DIHAPUS DARI LIST
+    adrSong p = searchSongByName(S, title);
+    if (p == nullptr) {
+        cout << "Lagu " << title << " tidak ditemukan.\n";
+        return;
+    }
+    deleteSongInAllPlaylists(L, p);
+    deleteSongFromList(S, p);
+    cout << "Lagu " << title << " berhasil dihapus dari semua playlist dan list lagu.\n";
+}
+
+
