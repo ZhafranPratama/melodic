@@ -28,6 +28,8 @@ struct elmSong {
     string artist;
     string genre;
     int duration;
+    adrSong next;
+    adrSong prev;
 };
 
 struct relation {
@@ -48,5 +50,12 @@ struct songList {
 
 void testHeader();
 void testBranchGit();
+void createListUser(userList &L);
+bool isEmptyUser(userList L);
+bool isEmptyPlaylist(adrUser p);
+adrUser createElemenUser(string username, string password);
+adrPlaylist createElemenPlaylist(string namaPlaylist);
+void addUser(userList &L, adrUser p);
+void addPlaylist(adrUser &p, adrPlaylist q);
 
 #endif
