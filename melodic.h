@@ -57,5 +57,7 @@ adrUser createElemenUser(string username, string password);
 adrPlaylist createElemenPlaylist(string namaPlaylist);
 void addUser(userList &L, adrUser p);
 void addPlaylist(adrUser &p, adrPlaylist q);
+adrSong createElemenSong(string artist, string title, string genre, int duration);
+void createListSong(songList &L);
 
 #endif
