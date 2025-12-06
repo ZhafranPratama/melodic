@@ -66,4 +66,22 @@ adrSong searchSongByTitle(songList L, string title);
 void deleteSongFromList(songList &L, adrSong p);
 void deleteSongInAllPlaylists(userList &L, adrSong song);
 void deleteSongByTitle(userList &L, songList &S, string title);
+
+// MENGHAPUS PLAYLIST
+void deletePlaylistByName(adrUser &user, string namaPlaylist);
+
+//FITUR ADMIN :MENGEDIT INFORMASI LAGU BERDASARKAN JUDUL
+void editSongByTitle(songList &L, string title);
+
+//MENAMPILKAN SELURUH DAFTAR LAGU YANG ADA
+void printAllSongs(songList L);
+
+//FITUR ADMIN MENAMPILKANS SELURUH USER YANG ADA
+void displayUserList(userList L);
+
+//MENAMPILKAN PLAYLIST YANG USER TERSEBUT MILIKI
+void showUserPlaylists(adrUser user);
+
+// MENAMPILKAN LAGU DALAM PLAYLIST
+void displaySongsInPlaylist(adrPlaylist playlist);
 #endif
