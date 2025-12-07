@@ -4,6 +4,7 @@ using namespace std;
 
 int main(){
     int admin;
+    
     //TAMPILAN ADMIN
     cout<<"Apa Yang Ingin Anda Lakukan\n";
     cout<<"1. Menambah Lagu\n";
@@ -13,7 +14,7 @@ int main(){
     cin>> admin;
 
     if (admin == "1"){
-        
+
     }
 
 
