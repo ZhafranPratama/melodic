@@ -3,8 +3,19 @@
 using namespace std;
 
 int main(){
-    
-    testHeader();
-    testBranchGit();
+    int admin;
+    //TAMPILAN ADMIN
+    cout<<"Apa Yang Ingin Anda Lakukan\n";
+    cout<<"1. Menambah Lagu\n";
+    cout<<"2. Menghapus Lagu\n";
+    cout<<"3. Mengubah Informasi Lagu\n";
+    cout<<"Masukkan (1/2/3)"<<endl;
+    cin>> admin;
+
+    if (admin == "1"){
+        
+    }
+
+
     return 0;
 }
