@@ -58,6 +58,7 @@ adrPlaylist createElemenPlaylist(string namaPlaylist);
 void addUser(userList &L, adrUser p);
 void addPlaylist(adrUser &p, adrPlaylist q);
 adrSong createElemenSong(string artist, string title, string genre, int duration);
+adrRelation createElemenRelation(adrSong song);
 void createListSong(songList &L);
 void addSong(songList &L, adrSong p);
 
@@ -84,4 +85,8 @@ void showUserPlaylists(adrUser user);
 
 // MENAMPILKAN LAGU DALAM PLAYLIST
 void displaySongsInPlaylist(adrPlaylist playlist);
+
+//MENAMBAHKAN LAGU KE DALAM PLAYLIST
+void addSongToPlaylist(adrPlaylist &playlist, adrSong song);
+
 #endif

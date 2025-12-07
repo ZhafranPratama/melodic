@@ -12,5 +12,10 @@ int main(){
     cout<<"Masukkan (1/2/3)"<<endl;
     cin>> admin;
 
+    if (admin == "1"){
+        
+    }
+
+
     return 0;
 }

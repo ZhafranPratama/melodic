@@ -82,6 +82,16 @@ adrSong q;
     return q;
 }
 
+adrRelation createElemenRelation(adrSong song) {
+    adrRelation r = new elmRelation;
+
+    r->nextSong = song;   
+    r->next = nullptr;    
+    r->prev = nullptr;
+
+    return r;
+}
+
 void createListSong(songList &L){
     L.first = nullptr;
     L.last = nullptr;
@@ -361,4 +371,33 @@ void displaySongsInPlaylist(adrPlaylist playlist) {
 
         r = r->next;
     }
+}
+
+// menambahkan lagu ke playlist
+void addSongToPlaylist(adrPlaylist &playlist, adrSong song) {
+    adrRelation r;
+    adrRelation p;
+
+    if (playlist == nullptr || song == nullptr) {
+        cout << "Playlist atau lagu tidak valid.\n";
+        return;
+    }
+
+    r = createElemenRelation(song);
+
+    // Playlist kosong
+    if (playlist->firstSong == nullptr) {
+        playlist->firstSong = r;
+    } else {
+         p = playlist->firstSong;
+
+        while (p->next != nullptr) {
+            p = p->next;
+        }
+        p->next = r;
+        r->prev = p;
+    }
+
+    cout << "Lagu \"" << song->title << "\" berhasil ditambahkan ke playlist \""
+         << playlist->namaPlaylist << "\".\n";
 }
