@@ -7,11 +7,13 @@ int main(){
     userList L;
     songList sL;
     adrSong S;
+    bool isFirstRun = true;
+    bool isPlay = false;
 
     createListUser(L);
     createListSong(sL);
 
-    login(L, sL, S);
+    login(L, sL, S, isFirstRun);
 
     return 0;
 }

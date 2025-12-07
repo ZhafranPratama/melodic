@@ -91,7 +91,7 @@ void displaySongsInPlaylist(adrPlaylist playlist);
 void addSongToPlaylist(adrPlaylist &playlist, adrSong song);
 
 //MENAMBAHKAN FITUR LOGIN
-void login(userList &L, songList &sL, adrSong &S);
+void login(userList &L, songList &sL, adrSong &S, bool &isFirstRun);
 
 //MENAMBAHKAN FITUR SEARCH USER BY USERNAME 
 adrUser searchUserByUsn(userList L, string username);
@@ -104,6 +104,9 @@ void songRecomendation(songList sL);
 
 //TAMPILAN ADMIN DI MAIN
 void tampilanAdmin(songList &sL, userList &uL);
-void tampilanUser(songList &L, adrUser &U, adrSong &S);
+void tampilanUser(songList &L, adrUser &U, adrSong &S, bool &isFirstRun);
+
+//TAMPILAN PLAY
+void statusPlay(bool &isFirstRun, bool isPlaylist, adrSong S, adrRelation R);
 
 #endif
