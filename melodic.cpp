@@ -541,8 +541,6 @@ void addSongToPlaylist(adrPlaylist &playlist, adrSong song) {
         r->prev = p;
     }
 
-    cout << "Lagu \"" << song->title << "\" berhasil ditambahkan ke playlist \""
-         << playlist->namaPlaylist << "\".\n";
 }
 
 // tampilan admin di main
@@ -587,7 +585,7 @@ void tampilanAdmin(songList &sL, userList &uL) {
 
 
 void tampilanUser(songList &L, adrUser &U, adrSong &S) {
-    int user;
+    int user,a;
     string pilihan;
     string title;
     string namaPlaylist;
@@ -603,50 +601,123 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S) {
 
      if (user == 1) {
         printAllSongs(L);
-
-        cout << "Lagu apa yang ingin anda dengarkan? (masukkan title / acak)\n";
-        cin >> pilihan;
-
-        if (pilihan == "acak") {
-            cout << "Memutar lagu secara acak...\n";
-            // tambahain function putar lagu berdasarkan nama
-        } else {
-            title = pilihan;
-            cout << "Memutar lagu berjudul: " << title << "\n";
-            // tambahkan function putar lagu dari song list
-        }
-    }else if (user == 2){
-        showUserPlaylists(U);
-
-        cout << "Playlist mana yang ingin anda lihat? Masukkan nama playlist:\n";
-        cin >> namaPlaylist;
-        
-        p = U->firstPlaylist;
-        while (p != nullptr && p->namaPlaylist != namaPlaylist) {
-            p = p->next;
-        }
-
-        if (p == nullptr) {
-            cout << "Playlist tidak ditemukan.\n";
-        } else {
-            displaySongsInPlaylist(p);
+              cout << "Apa Yang Ingin Anda Lakukan\n";
+                cout << "1. Memutar lagu\n";
+                cout << "2. Menambahkan lagu ke Play List\n";
+                cout << "3. Menambah lagu ke Favorite Song\n";
+                cout << "Masukkan (1/2/3): ";
+                cin >> a;
+                if (a == 1){
                 cout << "Lagu apa yang ingin anda dengarkan? (masukkan title / acak)\n";
                 cin >> pilihan;
+                    if (pilihan == "acak") {
+                        cout << "Memutar lagu secara acak...\n";
+                        // tambahain function putar lagu berdasarkan nama
+                    } else {
+                        title = pilihan;
+                        cout << "Memutar lagu berjudul: " << title << "\n";
+                         // tambahkan function putar lagu dari song list
+                    }
+                    tampilanUser(L,U,S);
+                }else if(a == 2){
+                    cout << "Lagu apa yang ingin anda tambahkan ke dalam playlist? (masukkan title)\n";
+                    cin >> title;
+                    cout << "Playlist mana yang ingin ditambahkan lagu " << title << "?\n";
+                    cin >> namaPlaylist;
 
-                if (pilihan == "acak") {
-                    cout << "Memutar lagu secara acak...\n";
-                    // tambahain function putar lagu berdasarkan nama
-                } else {
-                    title = pilihan;
-                    cout << "Memutar lagu berjudul: " << title << "\n";
-                    // tambahkan function putar lagu dari playlist
+                    adrSong s = searchSongByTitle(L, title);
+                    if (s != nullptr) {
+                        adrPlaylist p = U->firstPlaylist;
+                        bool found = false;
+
+                        while (p != nullptr) {
+                            if (p->namaPlaylist == namaPlaylist) {
+                                addSongToPlaylist(p, s);
+                                cout << "Lagu \"" << title << "\" berhasil ditambahkan ke playlist \"" << namaPlaylist << "\".\n";
+                                found = true;
+                                break;
+                            }
+                            p = p->next;
+                        }
+
+                        if (!found) {
+                            cout << "Playlist \"" << namaPlaylist << "\" tidak ditemukan!\n";
+                        }
+
+                    } else {
+                        cout << "Lagu tidak ditemukan!\n";
+                    }
+
+                    tampilanUser(L, U, S);
                 }
+                else if (a == 3){
+                    cout << "Lagu apa yang ingin anda tambahkan ke Favorite Song? (masukkan title)\n";
+                    cin >> title;
+                    adrSong s = searchSongByTitle(L, title);
+                    if (s != nullptr) {
+                        favSong(U, s); 
+                    } else {
+                        cout << "Lagu tidak ditemukan!\n";
+                    }
+                tampilanUser(L,U,S);
+                }
+    }else if (user == 2){
+        showUserPlaylists(U);
+                cout << "Apa Yang Ingin Anda Lakukan\n";
+                cout << "1. Melihat Lagu dalam PlayList\n";
+                cout << "2. Back To Menu";
+                cout << "Masukkan (1/2): ";
+                cin >> a;
+                
+                if (a == 1){
+                    cout << "Playlist mana yang ingin anda lihat? Masukkan nama playlist:\n";
+                    cin >> namaPlaylist;
+                    
+                    p = U->firstPlaylist;
+                    while (p != nullptr && p->namaPlaylist != namaPlaylist) {
+                        p = p->next;
+                    } 
+                    if (p == nullptr) {
+                      cout << "Playlist tidak ditemukan.\n";
+                    }
+                    else {
+                     displaySongsInPlaylist(p);
+                        cout << "Apa Yang Ingin Anda Lakukan\n";
+                        cout << "1. Memutar Lagu dalam PlayList\n";
+                        cout << "2. Back To Menu";
+                        cout << "Masukkan (1/2): ";
+                        cin >> a;
+                            if (a == 1){
+                                cout << "Lagu apa yang ingin anda dengarkan? (masukkan title / acak)\n";
+                                cin >> pilihan;
 
+                                if (pilihan == "acak") {
+                                    cout << "Memutar lagu secara acak...\n";
+                                    // tambahain function putar lagu berdasarkan nama
+                                } else {
+                                    title = pilihan;
+                                    cout << "Memutar lagu berjudul: " << title << "\n";
+                                    // tambahkan function putar lagu dari playlist
+                                }
+                            }else if(a == 2){
+                                tampilanUser(L,U,S);
+                            }
+                    }       
+
+        }else if(a ==2){
+           tampilanUser(L,U,S);
         }
 
     } else if (user == 3){
         displaySongsInPlaylist(U->firstPlaylist);
-            cout << "Lagu apa yang ingin anda dengarkan? (masukkan title / acak)\n";
+                cout << "Apa Yang Ingin Anda Lakukan\n";
+                cout << "1. Memutar Lagu\n";
+                cout << "2. Back To Menu";
+                cout << "Masukkan (1/2): ";
+                cin >> a;
+            
+            if (a == 1){
+                 cout << "Lagu apa yang ingin anda dengarkan? (masukkan title / acak)\n";
                 cin >> pilihan;
 
                 if (pilihan == "acak") {
@@ -657,19 +728,73 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S) {
                     cout << "Memutar lagu berjudul: " << title << "\n";
                     // tambahkan function putar lagu dari playlist
                 }
+                tampilanUser(L,U,S);
+            }else if(a == 2){
+                tampilanUser(L,U,S);
+            }
+           
     }else if (user == 4){
         songRecomendation(L);
-            cout << "Lagu apa yang ingin anda dengarkan? (masukkan title / acak)\n";
+                cout << "Apa Yang Ingin Anda Lakukan\n";
+                cout << "1. Memutar lagu\n";
+                cout << "2. Menambahkan lagu ke Play List\n";
+                cout << "3. Menambah lagu ke Favorite Song\n";
+                cout << "Masukkan (1/2/3): ";
+                cin >> a;
+                if (a == 1){
+                cout << "Lagu apa yang ingin anda dengarkan? (masukkan title / acak)\n";
                 cin >> pilihan;
+                    if (pilihan == "acak") {
+                        cout << "Memutar lagu secara acak...\n";
+                        // tambahain function putar lagu berdasarkan nama
+                    } else {
+                        title = pilihan;
+                        cout << "Memutar lagu berjudul: " << title << "\n";
+                         // tambahkan function putar lagu dari song list
+                    }
+                   tampilanUser(L,U,S); 
+                }else if(a == 2){
+                    cout << "Lagu apa yang ingin anda tambahkan ke dalam playlist? (masukkan title)\n";
+                    cin >> title;
+                    cout << "Playlist mana yang ingin ditambahkan lagu " << title << "?\n";
+                    cin >> namaPlaylist;
 
-                if (pilihan == "acak") {
-                    cout << "Memutar lagu secara acak...\n";
-                    // tambahain function putar lagu berdasarkan nama
-                } else {
-                    title = pilihan;
-                    cout << "Memutar lagu berjudul: " << title << "\n";
-                    // tambahkan function putar lagu dari playlist
+                    adrSong s = searchSongByTitle(L, title);
+                    if (s != nullptr) {
+                        adrPlaylist p = U->firstPlaylist;
+                        bool found = false;
+
+                        while (p != nullptr) {
+                            if (p->namaPlaylist == namaPlaylist) {
+                                addSongToPlaylist(p, s);
+                                cout << "Lagu \"" << title << "\" berhasil ditambahkan ke playlist \"" << namaPlaylist << "\".\n";
+                                found = true;
+                                break;
+                            }
+                            p = p->next;
+                        }
+
+                        if (!found) {
+                            cout << "Playlist \"" << namaPlaylist << "\" tidak ditemukan!\n";
+                        }
+
+                    } else {
+                        cout << "Lagu tidak ditemukan!\n";
+                    }
+
+                    tampilanUser(L, U, S); // kembali ke menu user
                 }
-    }
+                else if (a == 3){
+                    cout << "Lagu apa yang ingin anda tambahkan ke Favorite Song? (masukkan title)\n";
+                    cin >> title;
+                    adrSong s = searchSongByTitle(L, title);
+                    if (s != nullptr) {
+                        favSong(U, s); // tambah ke playlist Favorite Song
+                    } else {
+                        cout << "Lagu tidak ditemukan!\n";
+                    }
+                    tampilanUser(L,U,S);
+                 }   
+}
 }
 
