@@ -4,19 +4,14 @@ using namespace std;
 
 int main(){
     int admin;
-    
-    //TAMPILAN ADMIN
-    cout<<"Apa Yang Ingin Anda Lakukan\n";
-    cout<<"1. Menambah Lagu\n";
-    cout<<"2. Menghapus Lagu\n";
-    cout<<"3. Mengubah Informasi Lagu\n";
-    cout<<"Masukkan (1/2/3)"<<endl;
-    cin>> admin;
+    userList L;
+    songList sL;
+    adrSong S;
 
-    if (admin == "1"){
+    createListUser(L);
+    createListSong(sL);
 
-    }
-
+    login(L, sL, S);
 
     return 0;
 }

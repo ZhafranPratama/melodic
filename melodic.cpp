@@ -13,14 +13,6 @@ void login(userList &L, songList &sL, adrSong &S){
         p = searchUserByUsn(L, username);
         if (p != nullptr) {
             if (password == p->password) {
-                tampilanUser();
-            } else {
-                cout << "Password salah! Harap login kembali";
-                login(L);
-            }
-        } else {
-            cout << "User tidak valid! Harap login kembali";
-            login(L);
                 tampilanUser(sL, p, S);
             } else {
                 cout << "Password salah! Harap login kembali";
@@ -562,27 +554,34 @@ void tampilanAdmin(songList &sL, userList &uL) {
     cout << "1. Menambah Lagu\n";
     cout << "2. Menghapus Lagu\n";
     cout << "3. Mengubah Informasi Lagu\n";
-    cout << "Masukkan (1/2/3): ";
+    cout << "4. Lihat semua lagu\n";
+    cout << "5. Logout\n";
+    cout << "Masukkan (1/2/3/4/5): ";
     cin >> admin;
 
     if (admin == 1) {
-        addInfoSong(sL, uL); 
-        printAllSongs(sL);             
+        addInfoSong(sL, uL);            
     } 
     else if (admin == 2) {
         cout << "Masukkan Title lagu yang ingin dihapus: ";
         cin >> title;
         deleteSongByTitle(uL, sL, title);   
-        printAllSongs(sL);
     } 
     else if (admin == 3) {
         cout << "Masukkan Title lagu yang ingin diedit: ";
         cin >> title;
-        editSongByTitle(sL, uL,  title);  
-        printAllSongs(sL);        
-    } 
+        editSongByTitle(sL, uL,  title);         
+    }
+    else if (admin == 4) {
+        printAllSongs(sL);
+        tampilanAdmin(sL, uL);
+    }
+    else if (admin == 5) {
+        return;
+    }
     else {
         cout << "Input Tidak Sesuai\n";
+        tampilanAdmin(sL, uL);
     }
 }
 
