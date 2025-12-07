@@ -62,6 +62,7 @@ adrRelation createElemenRelation(adrSong song);
 void createListSong(songList &L);
 void addSong(songList &L, adrSong p);
 
+void addInfoSong(songList &L, userList &U);
 //MENGHAPUS LAGU 
 adrSong searchSongByTitle(songList L, string title);
 void deleteSongFromList(songList &L, adrSong p);
@@ -72,7 +73,7 @@ void deleteSongByTitle(userList &L, songList &S, string title);
 void deletePlaylistByName(adrUser &user, string namaPlaylist);
 
 //FITUR ADMIN :MENGEDIT INFORMASI LAGU BERDASARKAN JUDUL
-void editSongByTitle(songList &L, string title);
+void editSongByTitle(songList &L, userList &U, string title);
 
 //MENAMPILKAN SELURUH DAFTAR LAGU YANG ADA
 void printAllSongs(songList L);
@@ -90,7 +91,7 @@ void displaySongsInPlaylist(adrPlaylist playlist);
 void addSongToPlaylist(adrPlaylist &playlist, adrSong song);
 
 //MENAMBAHKAN FITUR LOGIN
-void login(userList L);
+void login(userList &L, songList &sL, adrSong &S);
 
 //MENAMBAHKAN FITUR SEARCH USER BY USERNAME 
 adrUser searchUserByUsn(userList L, string username);
@@ -100,5 +101,9 @@ void favSong(adrUser &u, adrSong s);
 
 //MENAMBAHKAN FITUR REKOMENDASI LAGU
 void songRecomendation(songList sL);
+
+//TAMPILAN ADMIN DI MAIN
+void tampilanAdmin(songList &sL, userList &uL);
+void tampilanUser(songList &L, adrUser &U, adrSong &S);
 
 #endif
