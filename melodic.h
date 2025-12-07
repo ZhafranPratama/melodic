@@ -92,6 +92,6 @@ void addSongToPlaylist(adrPlaylist &playlist, adrSong song);
 
 
 //TAMPILAN ADMIN DI MAIN
-void tampilanAdmin();
+void tampilanUser(songList &L, adrUser &U, adrSong &S);
 
 #endif
