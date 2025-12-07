@@ -1,11 +1,94 @@
 #include "melodic.h"
 
-void testHeader(){
-    cout << "pls jalan";
+void login(userList L){
+    string username, password;
+    adrUser p;
+    cout << "Masukkan username: ";
+    cin >> username;
+    cout << "Masukkan password: ";
+    cin >> password;
+    if (username == "admin" && password == "admin") {
+        tampilanAdmin();
+    }else {
+        p = searchUserByUsn(L, username);
+        if (p != nullptr) {
+            if (password == p->password) {
+                tampilanUser();
+            } else {
+                cout << "Password salah! Harap login kembali";
+                login(L);
+            }
+        } else {
+            cout << "User tidak valid! Harap login kembali";
+            login(L);
+        }
+    }
 }
 
-void testBranchGit(){
-    cout << "ini buat test doang";
+void favSong(adrUser &u, adrSong s) {
+    adrPlaylist p = u->firstPlaylist;
+    addSongToPlaylist(p, s);
+}
+
+void songRecomendation(songList sL){
+    adrSong p = sL.first;
+    string mood;
+    cout << "Mood saat ini apa?";
+    cin >> mood;
+
+    if (p == nullptr) {
+        cout << "Tidak ada lagu yang tersedia.\n";
+        return;
+    }
+
+    cout << "==== DAFTAR LAGU ====\n";
+
+    while (p != nullptr) {
+        if (mood == "Happy") {
+            if (p->genre == "Pop" || p->genre == "Hip-Hop") {
+                cout << "Title    : " << p->title << endl;
+                cout << "Artist   : " << p->artist << endl;
+                cout << "Genre    : " << p->genre << endl;
+                cout << "Duration : " << p->duration << " detik\n";
+                cout << "---------------------------\n";
+            }
+        } else if (mood == "Sad") {
+            if (p->genre == "Ballad") {
+                cout << "Title    : " << p->title << endl;
+                cout << "Artist   : " << p->artist << endl;
+                cout << "Genre    : " << p->genre << endl;
+                cout << "Duration : " << p->duration << " detik\n";
+                cout << "---------------------------\n";
+            }
+        } else if (mood == "Bersemangat") {
+            if (p->genre == "Dangdut" || p->genre == "Rock") {
+                cout << "Title    : " << p->title << endl;
+                cout << "Artist   : " << p->artist << endl;
+                cout << "Genre    : " << p->genre << endl;
+                cout << "Duration : " << p->duration << " detik\n";
+                cout << "---------------------------\n";
+            }
+        } else if (mood == "Santai") {
+            if (p->genre == "Jazz" || p->genre == "Indie") {
+                cout << "Title    : " << p->title << endl;
+                cout << "Artist   : " << p->artist << endl;
+                cout << "Genre    : " << p->genre << endl;
+                cout << "Duration : " << p->duration << " detik\n";
+                cout << "---------------------------\n";
+            }
+        } 
+        p = p->next;
+    }
+}
+
+adrUser searchUserByUsn(userList L, string username){
+    adrUser p;
+    p = L.first;
+    while (p != nullptr && p->username != username) {
+        p = p->next;
+    }
+
+    return p;
 }
 
 void createListUser(userList &L){
@@ -22,9 +105,13 @@ bool isEmptyPlaylist(adrUser p){
 }
 
 
-adrUser createElemenUser(string username, string password, adrPlaylist p){
+adrUser createElemenUser(string username, string password){
     adrUser u;
+    adrPlaylist p;
+    string namaPlaylist = "Favorite Song";
     u = new elmUser;
+    p = new elmPlaylist;
+    p = createElemenPlaylist(namaPlaylist);
 
     u->username = username;
     u->password = password;
@@ -48,6 +135,7 @@ adrPlaylist createElemenPlaylist(string namaPlaylist){
 }
 
 void addUser(userList &L, adrUser p){
+    string namaPlaylist = "Favorite Song";
     if (isEmptyUser(L)) {
         L.first = p;
         L.last = p;
@@ -69,7 +157,7 @@ void addPlaylist(adrUser &p, adrPlaylist q){
 }
 
 adrSong createElemenSong(string artist, string title, string genre, int duration){
-adrSong q;
+    adrSong q;
     q = new elmSong;
 
     q->artist= artist;
@@ -83,9 +171,9 @@ adrSong q;
 }
 
 adrRelation createElemenRelation(adrSong song) {
-    adrRelation r = new elmRelation;
+    adrRelation r = new relation;
 
-    r->nextSong = song;   
+    r->Song = song;   
     r->next = nullptr;    
     r->prev = nullptr;
 
@@ -157,7 +245,7 @@ void deleteSongInAllPlaylists(userList &L, adrSong song) {
                 q = r;           
                 r = r->next;
 
-                if (q->nextSong == song) {
+                if (q->Song == song) {
                     if (q == p->firstSong && q->next == nullptr) {
                         p->firstSong = nullptr;
                     } else if (q == p->firstSong) {
@@ -179,7 +267,7 @@ void deleteSongInAllPlaylists(userList &L, adrSong song) {
 
 void deleteSongByTitle(userList &L, songList &S, string title) {
     //MENCARI LAGU, DI HAPUS DARI PLAYLIST, DIHAPUS DARI LIST
-    adrSong p = searchSongByName(S, title);
+    adrSong p = searchSongByTitle(S, title);
     if (p == nullptr) {
         cout << "Lagu " << title << " tidak ditemukan.\n";
         return;
@@ -333,10 +421,10 @@ void showUserPlaylists(adrUser user) {
         } else {
             while (r != nullptr) {
                 cout << "   " << a << ". "
-                     << r->nextSong->title << " | "
-                     << r->nextSong->artist << " | "
-                     << r->nextSong->genre << " | Durasi: "
-                     << r->nextSong->duration << " detik\n";
+                     << r->Song->title << " | "
+                     << r->Song->artist << " | "
+                     << r->Song->genre << " | Durasi: "
+                     << r->Song->duration << " detik\n";
 
                 r = r->next;
                 a ++;
@@ -363,10 +451,10 @@ void displaySongsInPlaylist(adrPlaylist playlist) {
     cout << "LAGU DALAM PLAYLIST \"" << playlist->namaPlaylist << "\" ====\n";
 
     while (r != nullptr) {
-        cout << "Title    : " << r->nextSong->title << endl;
-        cout << "Artist   : " << r->nextSong->artist << endl;
-        cout << "Genre    : " << r->nextSong->genre << endl;
-        cout << "Duration : " << r->nextSong->duration << " detik" << endl;
+        cout << "Title    : " << r->Song->title << endl;
+        cout << "Artist   : " << r->Song->artist << endl;
+        cout << "Genre    : " << r->Song->genre << endl;
+        cout << "Duration : " << r->Song->duration << " detik" << endl;
         cout << "--------------------------\n";
 
         r = r->next;

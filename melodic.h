@@ -33,7 +33,7 @@ struct elmSong {
 };
 
 struct relation {
-    adrSong nextSong;
+    adrSong Song;
     adrRelation next;
     adrRelation prev;
 };
@@ -88,5 +88,17 @@ void displaySongsInPlaylist(adrPlaylist playlist);
 
 //MENAMBAHKAN LAGU KE DALAM PLAYLIST
 void addSongToPlaylist(adrPlaylist &playlist, adrSong song);
+
+//MENAMBAHKAN FITUR LOGIN
+void login(userList L);
+
+//MENAMBAHKAN FITUR SEARCH USER BY USERNAME 
+adrUser searchUserByUsn(userList L, string username);
+
+//MENAMBAHKAN FITUR ADD SONG TO FAVORITE
+void favSong(adrUser &u, adrSong s);
+
+//MENAMBAHKAN FITUR REKOMENDASI LAGU
+void songRecomendation(songList sL);
 
 #endif
