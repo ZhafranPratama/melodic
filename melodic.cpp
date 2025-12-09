@@ -3,6 +3,9 @@
 void login(userList &L, songList &sL, adrSong &S, bool &isFirstRun){
     string username, password;
     adrUser p;
+    cout << "============================================================\n";
+    cout << "                          L O G I N                         \n";
+    cout << "============================================================\n";
     cout << "Masukkan username: ";
     cin >> username;
     cout << "Masukkan password: ";
@@ -552,13 +555,15 @@ void tampilanAdmin(songList &sL, userList &uL) {
 
         cout << "Apa Yang Ingin Anda Lakukan\n";
         cout << "------------------------------------------------------------\n";
-        cout << "1. Menampilkan Seluruh Lagu\n";
-        cout << "2. Melihat Play List\n";
-        cout << "3. Melihat Favorite Song\n";
-        cout << "4. Melihat Daftar Lagu Sesuai Mood Anda\n";
+        cout << "1. Menambahkan lagu\n";
+        cout << "2. Menghapus lagu\n";
+        cout << "3. Edit lagu\n";
+        cout << "4. Lihat daftar lagu\n";
+        cout << "5. Keluar dari aplikasi\n";
         cout << "------------------------------------------------------------\n";
-        cout << "Masukkan pilihan (1/2/3/4): ";
+        cout << "Masukkan pilihan (1/2/3/4/5): ";
 
+        cin >> admin;
 
 
     if (admin == 1) {
@@ -623,13 +628,14 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, bool &isFirstRun) {
     cout << "                     T A M P I L A N  M E N U               \n";
     cout << "============================================================\n\n";
     cout << "Apa Yang Ingin Anda Lakukan\n";
-    ccout << "------------------------------------------------------------\n";
+    cout << "------------------------------------------------------------\n";
     cout << "1. Menampilkan Seluruh Lagu\n";
     cout << "2. Melihat Play List\n";
     cout << "3. Melihat Favorite Song\n";
     cout << "4. Melihat Daftar Lagu Sesuai Mood Anda\n";
+    cout << "5. Keluar dari aplikasi\n";
     cout << "------------------------------------------------------------\n";
-    cout << "Masukkan (1/2/3/4): ";
+    cout << "Masukkan (1/2/3/4/5): ";
     cin >> user;
     cout << "------------------------------------------------------------\n";
 
@@ -843,7 +849,9 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, bool &isFirstRun) {
                     }
                     tampilanUser(L, U, S, isFirstRun);
 
-                 }   
+                 }
+    }else if (user == 5){
+        return;
     }
 }
 
