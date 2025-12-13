@@ -1,12 +1,20 @@
 #ifndef MELODIC_H_INCLUDED
 #define MELODIC_H_INCLUDED
 #include <iostream>
+#include <thread>
+#include <atomic>
 using namespace std;
 
 typedef struct elmUser *adrUser;
 typedef struct elmPlaylist *adrPlaylist;
 typedef struct elmSong *adrSong;
 typedef struct relation *adrRelation;
+extern atomic<bool> isPlaying;
+extern atomic<bool> stopPlayer;
+extern bool isPlaylist;
+
+extern adrSong currentSongList;
+extern adrRelation currentSongPlaylist;
 
 struct elmUser {
     string username;
@@ -91,7 +99,7 @@ void displaySongsInPlaylist(adrPlaylist playlist);
 void addSongToPlaylist(adrPlaylist &playlist, adrSong song);
 
 //MENAMBAHKAN FITUR LOGIN
-void login(userList &L, songList &sL, adrSong &S, bool &isFirstRun);
+void login(userList &L, songList &sL, adrSong &S);
 
 //MENAMBAHKAN FITUR SEARCH USER BY USERNAME 
 adrUser searchUserByUsn(userList L, string username);
@@ -104,9 +112,15 @@ void songRecomendation(songList sL);
 
 //TAMPILAN ADMIN DI MAIN
 void tampilanAdmin(songList &sL, userList &uL);
-void tampilanUser(songList &L, adrUser &U, adrSong &S, bool &isFirstRun);
+void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongPlaylist, adrSong &currentSongList, bool &isPlaylist);
 
 //TAMPILAN PLAY
-void statusPlay(bool &isFirstRun, bool isPlaylist, adrSong S, adrRelation R);
+void statusPlay( bool isPlaylist, adrSong S, adrRelation R);
+void playSongFromList(songList L, adrSong &currentSongList, string title);
+void nextSongList(adrSong &current, songList S);
+void prevSongList(adrSong &current, songList S);
+void playSongFromPlaylist(adrPlaylist playlist, adrRelation &current, string title);
+void nextPlaylistSong(adrRelation &current);
+void prevPlaylistSong(adrRelation &current);
 
 #endif

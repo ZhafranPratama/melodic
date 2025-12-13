@@ -1,5 +1,6 @@
 #include <iostream>
 #include "melodic.h"
+#include <thread>
 using namespace std;
 
 int main(){
@@ -166,7 +167,6 @@ int main(){
     addSongToPlaylist(pl2_u5, song28);
     addSongToPlaylist(pl2_u5, song13);
     addSongToPlaylist(pl2_u5, song15);
-    login(U, S, aS, isFirstRun);
-
+    login(U, S, aS);
     return 0;
 }
