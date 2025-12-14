@@ -55,9 +55,22 @@ struct songList {
     adrSong first;
     adrSong last;
 };
+typedef struct elmHistory *adrHistory;
 
-void testHeader();
-void testBranchGit();
+struct elmHistory {
+    adrSong song;
+    adrHistory next;
+};
+
+struct history {
+    adrHistory first;
+};
+
+
+
+void createHistory(history &H);
+void push(history &H, adrSong s);
+void showHistory(history H); 
 void createListUser(userList &L);
 bool isEmptyUser(userList L);
 bool isEmptyPlaylist(adrUser p);
@@ -70,52 +83,24 @@ adrRelation createElemenRelation(adrSong song);
 void createListSong(songList &L);
 void addSong(songList &L, adrSong p);
 
-void addInfoSong(songList &L, userList &U);
-//MENGHAPUS LAGU 
+void addInfoSong(songList &L, userList &U, adrSong &S, history &h);
 adrSong searchSongByTitle(songList L, string title);
 void deleteSongFromList(songList &L, adrSong p);
 void deleteSongInAllPlaylists(userList &L, adrSong song);
-void deleteSongByTitle(userList &L, songList &S, string title);
-
-// MENGHAPUS PLAYLIST
+void deleteSongByTitle(userList &L, songList &S, string title, adrSong &s,history &h);
 void deletePlaylistByName(adrUser &user, string namaPlaylist);
-
-//FITUR ADMIN :MENGEDIT INFORMASI LAGU BERDASARKAN JUDUL
-void editSongByTitle(songList &L, userList &U, string title);
-
-//MENAMPILKAN SELURUH DAFTAR LAGU YANG ADA
+void editSongByTitle(songList &L, userList &U, string title , adrSong &s, history &h);
 void printAllSongs(songList L);
-
-//FITUR ADMIN MENAMPILKANS SELURUH USER YANG ADA
 void displayUserList(userList L);
-
-//MENAMPILKAN PLAYLIST YANG USER TERSEBUT MILIKI
 void showUserPlaylists(adrUser user);
-
-// MENAMPILKAN LAGU DALAM PLAYLIST
 void displaySongsInPlaylist(adrPlaylist playlist);
-
-//MENAMBAHKAN LAGU KE DALAM PLAYLIST
 void addSongToPlaylist(adrPlaylist &playlist, adrSong song);
-
-//MENAMBAHKAN FITUR LOGIN
-void login(userList &L, songList &sL, adrSong &S);
-
-//MENAMBAHKAN FITUR SEARCH USER BY USERNAME 
+void login(userList &L, songList &sL, adrSong &S, history & h);
 adrUser searchUserByUsn(userList L, string username);
-
-//MENAMBAHKAN FITUR ADD SONG TO FAVORITE
 void favSong(adrUser &u, adrSong s);
-
-//MENAMBAHKAN FITUR REKOMENDASI LAGU
 void songRecomendation(songList sL);
-
-//TAMPILAN ADMIN DI MAIN
-void tampilanAdmin(songList &sL, userList &uL);
-void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongPlaylist, adrSong &currentSongList, bool &isPlaylist);
-
-//TAMPILAN PLAY
-void statusPlay( bool isPlaylist, adrSong S, adrRelation R);
+void tampilanAdmin(songList &sL, userList &uL, adrSong &s, history &h);
+void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongPlaylist, adrSong &currentSongList, bool &isPlaylist, history & h);
 void playSongFromList(songList L, adrSong &currentSongList, string title);
 void nextSongList(adrSong &current, songList S);
 void prevSongList(adrSong &current, songList S);

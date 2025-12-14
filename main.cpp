@@ -10,14 +10,14 @@ int main(){
     userList U;
     songList S;
     adrSong aS;
+    history h;
 
 
     createListUser(U);
     createListSong(S);
+    createHistory(h);
 
-   // =========================
-    // 1. Tambah 30 Lagu Global
-    // =========================
+ 
     adrSong song1  = createElemenSong("Taylor_Swift",   "Love_Story",          "Pop",       235);
     adrSong song2  = createElemenSong("Queen",          "Bohemian_Rhapsody",   "Rock",      355);
     adrSong song3  = createElemenSong("Adele",          "Someone_Like_You",    "Ballad",    285);
@@ -53,7 +53,7 @@ int main(){
                     song11, song12, song13, song14, song15, song16, song17, song18, song19, song20,
                     song21, song22, song23, song24, song25, song26, song27, song28, song29, song30};
 
-    // masukkan semua lagu ke global list
+  
     for (int i = 0; i < 30; i++) {
         addSong(S, songs[i]);
     }
@@ -71,39 +71,32 @@ int main(){
     addUser(U, user5);
 
 
-   // User 1
     adrPlaylist pl1_u1 = createElemenPlaylist("Chill_Vibes");
     adrPlaylist pl2_u1 = createElemenPlaylist("Morning_Acoustic");
     addPlaylist(user1, pl1_u1);
     addPlaylist(user1, pl2_u1);
 
-    // User 2
     adrPlaylist pl1_u2 = createElemenPlaylist("Workout_Hits");
     adrPlaylist pl2_u2 = createElemenPlaylist("Rock_Arena");
     addPlaylist(user2, pl1_u2);
     addPlaylist(user2, pl2_u2);
 
-    // User 3
     adrPlaylist pl1_u3 = createElemenPlaylist("Sad_Hours");
     adrPlaylist pl2_u3 = createElemenPlaylist("Jazz_Lounge");
     addPlaylist(user3, pl1_u3);
     addPlaylist(user3, pl2_u3);
 
-    // User 4
     adrPlaylist pl1_u4 = createElemenPlaylist("Focus_Mode");
     adrPlaylist pl2_u4 = createElemenPlaylist("Night_Ride");
     addPlaylist(user4, pl1_u4);
     addPlaylist(user4, pl2_u4);
 
-    // User 5
     adrPlaylist pl1_u5 = createElemenPlaylist("Happy_Vibes");
     adrPlaylist pl2_u5 = createElemenPlaylist("EDM_Party");
     addPlaylist(user5, pl1_u5);
     addPlaylist(user5, pl2_u5);
 
-    // =========================
-    // 4. Tambah lagu ke playlist
-    // =========================
+  
     addSongToPlaylist(user1->firstPlaylist, song1);
     addSongToPlaylist(user1->firstPlaylist, song3);
     addSongToPlaylist(user1->firstPlaylist, song11);
@@ -116,7 +109,6 @@ int main(){
     addSongToPlaylist(pl2_u1, song16);
     addSongToPlaylist(pl2_u1, song23);
 
-    // user2 favorite
    addSongToPlaylist(user2->firstPlaylist, song2);
     addSongToPlaylist(user2->firstPlaylist, song19);
     addSongToPlaylist(user2->firstPlaylist, song27);
@@ -129,8 +121,6 @@ int main(){
     addSongToPlaylist(pl2_u2, song19);
     addSongToPlaylist(pl2_u2, song27);
 
-
-    // user3 favorite
     addSongToPlaylist(user3->firstPlaylist, song6);
     addSongToPlaylist(user3->firstPlaylist, song22);
     addSongToPlaylist(user3->firstPlaylist, song26);
@@ -142,7 +132,7 @@ int main(){
     addSongToPlaylist(pl2_u3, song4);
     addSongToPlaylist(pl2_u3, song23);
     addSongToPlaylist(pl2_u3, song12);
-    // user 4
+    
     addSongToPlaylist(user4->firstPlaylist, song14);
     addSongToPlaylist(user4->firstPlaylist, song20);
     addSongToPlaylist(user4->firstPlaylist, song24);
@@ -155,7 +145,7 @@ int main(){
     addSongToPlaylist(pl2_u4, song28);
     addSongToPlaylist(pl2_u4, song13);
 
-    // user 5
+ 
     addSongToPlaylist(user5->firstPlaylist, song7);
     addSongToPlaylist(user5->firstPlaylist, song18);
     addSongToPlaylist(user5->firstPlaylist, song20);
@@ -167,6 +157,6 @@ int main(){
     addSongToPlaylist(pl2_u5, song28);
     addSongToPlaylist(pl2_u5, song13);
     addSongToPlaylist(pl2_u5, song15);
-    login(U, S, aS);
+    login(U, S, aS,h);
     return 0;
 }

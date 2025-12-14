@@ -2,7 +2,7 @@
 #include <thread>
 #include <chrono>
 
-void login(userList &L, songList &sL, adrSong &S){
+void login(userList &L, songList &sL, adrSong &S, history &h){
     string username, password;
     adrSong currentSongList = nullptr;
     adrRelation currentSongPlaylist = nullptr;
@@ -16,22 +16,54 @@ void login(userList &L, songList &sL, adrSong &S){
     cout << "Masukkan password: ";
     cin >> password;
     if (username == "admin" && password == "admin") {
-        tampilanAdmin(sL, L);
+        tampilanAdmin(sL, L, S , h);
     }else {
         p = searchUserByUsn(L, username);
         if (p != nullptr) {
             if (password == p->password) {
-                tampilanUser(sL, p, S, currentSongPlaylist, currentSongList, isPlaylist);
+                tampilanUser(sL, p, S, currentSongPlaylist, currentSongList, isPlaylist,h);
             } else {
                 cout << "Password salah! Harap login kembali" << endl;
-                login(L, sL, S);
+                login(L, sL, S,h);
             }
         } else {
             cout << "User tidak valid! Harap login kembali" << endl;
-            login(L, sL, S);
+            login(L, sL, S,h);
         }
     }
 }
+void createHistory(history &H) {
+    H.first = nullptr;
+}
+
+void push(history &H, adrSong s) {
+    if (s == nullptr) return;
+    adrHistory p = new elmHistory;
+    p->song = s;
+    p->next = H.first;
+    H.first = p;
+}
+
+void showHistory(history H) {
+    if (H.first == nullptr) {
+        cout << "History lagu masih kosong.\n";
+    } else {
+        cout << "================== HISTORY LAGU ================== \n";
+        int i = 1;
+        adrHistory p = H.first;
+
+        while (p != nullptr) {
+            cout << i << ". "
+                << p->song->title << " | "
+                << p->song->artist << " | "
+                << p->song->genre << endl;
+            p = p->next;
+            i++;
+        }
+        cout << "================================================== \n";
+    }
+}
+
 
 void favSong(adrUser &u, adrSong s) {
     adrPlaylist p = u->firstPlaylist;
@@ -204,7 +236,7 @@ void addSong(songList &L, adrSong p) {
     }
 }
 
-void addInfoSong(songList &L, userList &U){
+void addInfoSong(songList &L, userList &U, adrSong &S, history &h){
     string artist, title, genre;
     int duration;
     string jawaban;
@@ -227,7 +259,7 @@ void addInfoSong(songList &L, userList &U){
     cin >> jawaban;
 
     if (jawaban == "iya") {
-        tampilanAdmin(L, U);   
+        tampilanAdmin(L, U, S,h);   
     } else if (jawaban == "tidak") {
         cout << "Terima kasih\n";
         return;
@@ -237,7 +269,6 @@ void addInfoSong(songList &L, userList &U){
 
 
 adrSong searchSongByTitle(songList L, string title) {
-    // MENCARI LAGU BERDASARKAN TITLE
     adrSong p = L.first;
 
     while (p != nullptr) {
@@ -250,7 +281,6 @@ adrSong searchSongByTitle(songList L, string title) {
 }
 
 void deleteSongFromList(songList &L, adrSong p) {
-    // MENGHAPUS LAGU DARI LIST LAGU 
     if (p == nullptr) 
     return ;
 
@@ -269,7 +299,7 @@ void deleteSongFromList(songList &L, adrSong p) {
     }
 }
 void deleteSongInAllPlaylists(userList &L, adrSong song) {
-    // MENGHAPUS LAGU TERTENTU DARI SEMUA PLAYLIST, DARI SEMUA USER
+   
     adrUser u = L.first;         
     adrPlaylist p;               
     adrRelation r;               
@@ -305,8 +335,8 @@ void deleteSongInAllPlaylists(userList &L, adrSong song) {
     }
 }
 
-void deleteSongByTitle(userList &L, songList &S, string title) {
-    //MENCARI LAGU, DI HAPUS DARI PLAYLIST, DIHAPUS DARI LIST
+void deleteSongByTitle(userList &L, songList &S, string title, adrSong &s,history &h) {
+
     adrSong p = searchSongByTitle(S, title);
     string jawaban;
     if (p == nullptr) {
@@ -320,31 +350,27 @@ void deleteSongByTitle(userList &L, songList &S, string title) {
     cout << "Apakah anda ingin kembali ke main menu? (iya / tidak)\n";
     cin >> jawaban;
     if (jawaban == "iya") {
-        tampilanAdmin(S, L);   
+        tampilanAdmin(S, L, s, h);   
     } else if (jawaban == "tidak") {
         cout << "Terima kasih\n";
         return;
     }
 }
 
-// HAPUS PLAYLIST
 void deletePlaylistByName(adrUser &user, string namaPlaylist) {
     if (user == nullptr) 
     return ;
 
     adrPlaylist p = user->firstPlaylist;
 
-    // cari playlist milik user yang login
     while (p != nullptr && p->namaPlaylist != namaPlaylist) {
         p = p->next;
     }
-    // jika tidak ditemukan
     if (p == nullptr) {
         cout << "Playlist dengan nama \"" << namaPlaylist << "\" tidak tersedia.\n";
         return;
     }
 
-    // HAPUS semua relation (lagu dalam playlist)
     adrRelation r = p->firstSong;
     adrRelation temp;
 
@@ -354,22 +380,18 @@ void deletePlaylistByName(adrUser &user, string namaPlaylist) {
         delete temp;
     }
 
-    // HAPUS PLAYLIST DARI DLL USER
     if (p == user->firstPlaylist && p->next == nullptr) {
-        // hanya 1 playlist
         user->firstPlaylist = nullptr;
 
     } else if (p == user->firstPlaylist) {
-        // playlist pertama
         user->firstPlaylist = p->next;
         p->next->prev = nullptr;
 
     } else if (p->next == nullptr) {
-        // playlist terakhir
         p->prev->next = nullptr;
 
     } else {
-        // playlist di tengah
+        
         p->prev->next = p->next;
         p->next->prev = p->prev;
     }
@@ -378,8 +400,8 @@ void deletePlaylistByName(adrUser &user, string namaPlaylist) {
     cout << "Playlist \"" << namaPlaylist << "\" berhasil dihapus.\n";
 }
 
-//Procedure untuk admin mengedit data lagu berdasarkan nama
-void editSongByTitle(songList &L, userList &U, string title) {
+
+void editSongByTitle(songList &L, userList &U, string title , adrSong &s, history &h){
     adrSong p = searchSongByTitle(L, title);
     string newTitle, newArtist, newGenre;
     string jawaban;
@@ -413,15 +435,13 @@ void editSongByTitle(songList &L, userList &U, string title) {
     cin >> jawaban;
 
     if (jawaban == "iya") {
-        tampilanAdmin(L, U);  
+        tampilanAdmin(L, U, s,h);  
     } else {
         cout << "Terima kasih\n";
         return;
     }
 }
 
-
-// menampilkan seluruh lagu
 void printAllSongs(songList L) {
     adrSong p = L.first;
 
@@ -443,7 +463,6 @@ void printAllSongs(songList L) {
     }
 }
 
-//menampilkan user yang ada(admin)
 void displayUserList(userList L) {
     adrUser p = L.first;
 
@@ -459,7 +478,7 @@ void displayUserList(userList L) {
         p = p->next;
     }
 }
-// menampilkan playlist
+
 void showUserPlaylists(adrUser user) {
     int a;
     adrRelation r;
@@ -499,7 +518,7 @@ void showUserPlaylists(adrUser user) {
     }
 }
 
-// menampilkan lagu dalam playlist
+
 void displaySongsInPlaylist(adrPlaylist playlist) {
    adrRelation r;
     if (playlist == nullptr) {
@@ -523,7 +542,7 @@ void displaySongsInPlaylist(adrPlaylist playlist) {
     }
 }
 
-// menambahkan lagu ke playlist
+
 void addSongToPlaylist(adrPlaylist &playlist, adrSong song) {
     adrRelation r;
     adrRelation p;
@@ -535,7 +554,6 @@ void addSongToPlaylist(adrPlaylist &playlist, adrSong song) {
 
     r = createElemenRelation(song);
 
-    // Playlist kosong
     if (playlist->firstSong == nullptr) {
         playlist->firstSong = r;
     } else {
@@ -550,8 +568,7 @@ void addSongToPlaylist(adrPlaylist &playlist, adrSong song) {
 
 }
 
-// tampilan admin di main
-void tampilanAdmin(songList &sL, userList &uL) {
+void tampilanAdmin(songList &sL, userList &uL, adrSong &s, history &h) {
     int admin;
     string title;
         cout << "============================================================\n";
@@ -564,40 +581,42 @@ void tampilanAdmin(songList &sL, userList &uL) {
         cout << "2. Menghapus lagu\n";
         cout << "3. Edit lagu\n";
         cout << "4. Lihat daftar lagu\n";
-        cout << "5. Keluar dari aplikasi\n";
+        cout << "5. Kembali ke LOGIN\n";
         cout << "------------------------------------------------------------\n";
-        cout << "Masukkan pilihan (1/2/3/4/5): ";
+        cout << "Masukkan pilihan (1 - 5): ";
 
         cin >> admin;
 
 
     if (admin == 1) {
-        addInfoSong(sL, uL);            
+        addInfoSong(sL, uL , s,h);            
     } 
     else if (admin == 2) {
         cout << "Masukkan Title lagu yang ingin dihapus: ";
         cin >> title;
-        deleteSongByTitle(uL, sL, title);   
+        deleteSongByTitle(uL, sL, title, s,h);   
     } 
     else if (admin == 3) {
         cout << "Masukkan Title lagu yang ingin diedit: ";
         cin >> title;
-        editSongByTitle(sL, uL,  title);         
+        editSongByTitle(sL, uL,  title, s,h);         
     }
     else if (admin == 4) {
         printAllSongs(sL);
-        tampilanAdmin(sL, uL);
+        tampilanAdmin(sL, uL , s,h);
     }
     else if (admin == 5) {
-        return;
-    }
+        login(uL, sL, s,h);
+    } 
     else {
         cout << "Input Tidak Sesuai\n";
-        tampilanAdmin(sL, uL);
+        tampilanAdmin(sL, uL, s,h);
     }
 }
 
-void statusPlay(bool isPlaylist, adrSong S, adrRelation R) {
+void statusPlay(bool isPlaylist, adrSong S, adrRelation R, songList L) {
+    cout << "------------------------------------------------------------\n";
+    cout << "                         S O N G                             \n";
     cout << "------------------------------------------------------------\n";
     if (isPlaylist) {
         if (R == nullptr) {
@@ -608,10 +627,10 @@ void statusPlay(bool isPlaylist, adrSong S, adrRelation R) {
              << "None" << endl;
         } else {
         cout << "Prev Song    : " 
-             << (R->prev == nullptr ? "None" : R->prev->Song->title) << endl;
+             << (R->prev == nullptr ? L.last->title : R->prev->Song->title) << endl;
         cout << "Current Song : " << (R == nullptr ? "None" : R->Song->title) << endl;
         cout << "Next Song    : " 
-             << (R->next == nullptr ? "None" : R->next->Song->title) << endl;
+             << (R->next == nullptr ? L.first->title : R->next->Song->title) << endl;
         }
     } else if (!isPlaylist) {
         if (S == nullptr) {
@@ -620,10 +639,10 @@ void statusPlay(bool isPlaylist, adrSong S, adrRelation R) {
             cout << "Next Song    : " << "None" << endl;
         }else {
         cout << "Prev Song    : " 
-             << (S->prev == nullptr ? "None" : S->prev->title) << endl;
+             << (S->prev == nullptr ? L.last->title : S->prev->title) << endl;
         cout << "Current Song : " << (S == nullptr ? "None" : S->title) << endl;
         cout << "Next Song    : " 
-             << (S->next == nullptr ? "None" : S->next->title) << endl;
+             << (S->next == nullptr ? L.first->title : S->next->title) << endl;
         }
     }
     cout << "------------------------------------------------------------\n";
@@ -657,7 +676,7 @@ void playSongFromList(songList L, adrSong &current, string title) {
 void nextSongList(adrSong &current, songList S) {
     if (current != nullptr && current->next != nullptr) {
         current = current->next;
-    } else if (current->next == nullptr) {
+    } else if (current == nullptr || current->next == nullptr) {
         current = S.first;
     }
 }
@@ -665,7 +684,7 @@ void nextSongList(adrSong &current, songList S) {
 void prevSongList(adrSong &current, songList S) {
     if (current != nullptr && current->prev != nullptr) {
         current = current->prev;
-    } else if (current->prev == nullptr) {
+    } else if (current == nullptr || current->prev == nullptr) {
         current = S.last;
     }
 }
@@ -711,14 +730,14 @@ void prevPlaylistSong(adrRelation &current) {
         current = current->prev;
 }
 
-void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongPlaylist, adrSong &currentSongList, bool &isPlaylist) {
+void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongPlaylist, adrSong &currentSongList, bool &isPlaylist, history &h) {
     int user;
     string pilihan;
     string title;
     string namaPlaylist;
     adrPlaylist p;
     int a ;
-    statusPlay(isPlaylist, currentSongList, currentSongPlaylist);
+    statusPlay(isPlaylist, currentSongList, currentSongPlaylist, L);
     cout << "\n============================================================\n";
     cout << "                     T A M P I L A N  M E N U               \n";
     cout << "============================================================\n\n";
@@ -730,9 +749,12 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
     cout << "4. Melihat Daftar Lagu Sesuai Mood Anda\n";
     cout << "5. Play Next Song\n";
     cout << "6. Play Previous Song\n";
-    cout << "7. Keluar dari aplikasi\n";
+    cout << "7. Tambahkan lagu ke favorite Song\n";
+    cout << "8. Tambahkan lagu ke Playlist \n";
+    cout << "9. Lihat history lagu \n";
+    cout << "0. Keluar dari aplikasi\n";
     cout << "------------------------------------------------------------\n";
-    cout << "Masukkan (1/2/3/4/5/6/7): ";
+    cout << "Masukkan (0 - 9): ";
     cin >> user;
     cout << "------------------------------------------------------------\n";
 
@@ -743,7 +765,8 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                 cout << "1. Memutar lagu\n";
                 cout << "2. Menambahkan lagu ke Play List\n";
                 cout << "3. Menambah lagu ke Favorite Song\n";
-                cout << "Masukkan (1/2/3): ";
+                cout << "4. Back to menu\n";
+                cout << "Masukkan (1 - 4): ";
                 cin >> a;
                 cout << "============================================================\n";
                 if (a == 1){
@@ -751,17 +774,17 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                 cin >> pilihan;
                     if (pilihan == "acak") {
                         cout << "Memutar lagu secara acak...\n";
-                        // tambahain function putar lagu berdasarkan nama
                         playSongFromList(L, currentSongList, pilihan);
                         isPlaylist = false;
+                        push(h, currentSongList);
                     } else {
                         title = pilihan;
                         cout << "Memutar lagu berjudul: " << title << "\n";
-                         // tambahkan function putar lagu dari song list
                          playSongFromList(L, currentSongList, pilihan);
                          isPlaylist = false;
+                         push(h, currentSongList);
                     }
-                    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
                 }else if(a == 2){
                     cout << "Lagu apa yang ingin anda tambahkan ke dalam playlist? (masukkan title)\n";
                     cin >> title;
@@ -791,7 +814,7 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                         cout << "Lagu tidak ditemukan!\n";
                     }
 
-                    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
 
                 }
                 else if (a == 3){
@@ -803,14 +826,16 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                     } else {
                         cout << "Lagu tidak ditemukan!\n";
                     }
-                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
+                }else if(a == 4){
+                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
                 }
     }else if (user == 2){
         showUserPlaylists(U);
                 cout << "============================================================\n";
                 cout << "Apa Yang Ingin Anda Lakukan\n";
                 cout << "1. Melihat Lagu dalam PlayList\n";
-                cout << "2. Back To Menu";
+                cout << "2. Back To Menu\n";
                 cout << "Masukkan (1/2): ";
                 cin >> a;
                 cout << "============================================================\n";
@@ -831,7 +856,7 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                      cout << "============================================================\n";
                         cout << "Apa Yang Ingin Anda Lakukan\n";
                         cout << "1. Memutar Lagu dalam PlayList\n";
-                        cout << "2. Back To Menu";
+                        cout << "2. Back To Menu\n";
                         cout << "Masukkan (1/2): ";
                         cin >> a;
                     cout << "============================================================\n";
@@ -841,25 +866,27 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
 
                                 if (pilihan == "acak") {
                                     cout << "Memutar lagu secara acak...\n";
-                                    // tambahain function putar lagu berdasarkan nama
                                     playSongFromPlaylist(p, currentSongPlaylist, pilihan);
                                     isPlaylist = true;
+                                    push(h, currentSongPlaylist->Song);
                                 } else {
                                     title = pilihan;
                                     cout << "Memutar lagu berjudul: " << title << "\n";
-                                    // tambahkan function putar lagu dari playlist
                                     playSongFromPlaylist(p, currentSongPlaylist, pilihan);
                                     isPlaylist = true;
+                                    if (currentSongPlaylist != nullptr){
+                                    push(h, currentSongPlaylist->Song);
+                                    }
                                 }
-                                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
                             }else if(a == 2){
-                                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
 
                             }
                     }       
 
         }else if(a ==2){
-           tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+           tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
 
         }
 
@@ -868,7 +895,7 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                 cout << "============================================================\n";
                 cout << "Apa Yang Ingin Anda Lakukan\n";
                 cout << "1. Memutar Lagu\n";
-                cout << "2. Back To Menu";
+                cout << "2. Back To Menu\n";
                 cout << "Masukkan (1/2): ";
                 cin >> a;
                 cout << "============================================================\n";
@@ -878,20 +905,18 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
 
                 if (pilihan == "acak") {
                     cout << "Memutar lagu secara acak...\n";
-                    // tambahain function putar lagu berdasarkan nama
                     playSongFromPlaylist(p, currentSongPlaylist, pilihan);
                     isPlaylist = true;
                 } else {
                     title = pilihan;
                     cout << "Memutar lagu berjudul: " << title << "\n";
-                    // tambahkan function putar lagu dari playlist
                     playSongFromPlaylist(p, currentSongPlaylist, pilihan);
                     isPlaylist = true;
                 }
-                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
 
             }else if(a == 2){
-                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
 
             }
            
@@ -902,7 +927,8 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                 cout << "1. Memutar lagu\n";
                 cout << "2. Menambahkan lagu ke Play List\n";
                 cout << "3. Menambah lagu ke Favorite Song\n";
-                cout << "Masukkan (1/2/3): ";
+                cout << "4. Back to menu\n";
+                cout << "Masukkan (1/2/3/4): ";
                 cin >> a;
                 cout << "============================================================\n";
                 if (a == 1){
@@ -910,13 +936,11 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                 cin >> pilihan;
                     if (pilihan == "acak") {
                         cout << "Memutar lagu secara acak...\n";
-                        // tambahain function putar lagu berdasarkan nama
                     } else {
                         title = pilihan;
                         cout << "Memutar lagu berjudul: " << title << "\n";
-                         // tambahkan function putar lagu dari song list
                     }
-                   tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                   tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
                 }else if(a == 2){
                     cout << "Lagu apa yang ingin anda tambahkan ke dalam playlist? (masukkan title)\n";
                     cin >> title;
@@ -946,19 +970,21 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                         cout << "Lagu tidak ditemukan!\n";
                     }
 
-                    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
                 }
                 else if (a == 3){
                     cout << "Lagu apa yang ingin anda tambahkan ke Favorite Song? (masukkan title)\n";
                     cin >> title;
                     adrSong s = searchSongByTitle(L, title);
                     if (s != nullptr) {
-                        favSong(U, s); // tambah ke playlist Favorite Song
+                        favSong(U, s); 
                     } else {
                         cout << "Lagu tidak ditemukan!\n";
                     }
-                    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+                    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
 
+                 }else if (a == 4){
+                    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
                  }
     }else if (user == 5){
         if (isPlaylist){
@@ -969,10 +995,12 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
             }else {
                 nextPlaylistSong(currentSongPlaylist);
             }
-            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+            push(h, currentSongList);
+            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
         } else {
             nextSongList(currentSongList, L);
-            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+            push(h, currentSongList);
+            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
         }
     }else if (user == 6){
         if (isPlaylist){
@@ -983,12 +1011,81 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
             } else {
                 prevPlaylistSong(currentSongPlaylist);
             }
-            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+            push(h, currentSongList);
+            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
         } else {
             prevSongList(currentSongList, L);
-            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist);
+            push(h, currentSongList);
+            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
         }
     }else if (user == 7){
+        adrSong songToAdd = nullptr;
+
+    if (isPlaylist) {
+        if (currentSongPlaylist != nullptr)
+            songToAdd = currentSongPlaylist->Song;
+    } else {
+        songToAdd = currentSongList;
+    }
+
+    if (songToAdd == nullptr) {
+        cout << "Tidak ada lagu yang sedang diputar.\n";
+        tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
+        return;
+    }
+
+    favSong(U, songToAdd);
+    cout << "Lagu \"" << songToAdd->title 
+         << "\" berhasil ditambahkan ke Favorite Song.\n";
+
+    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
+
+    }else if (user ==8){
+    adrSong songToAdd = nullptr;
+    string namaPlaylist;
+
+    if (isPlaylist) {
+        if (currentSongPlaylist != nullptr)
+            songToAdd = currentSongPlaylist->Song;
+    } else {
+        songToAdd = currentSongList;
+    }
+
+    if (songToAdd == nullptr) {
+        cout << "Tidak ada lagu yang sedang diputar.\n";
+        tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
+        return;
+    }
+
+    cout << "Masukkan nama playlist tujuan:\n";
+    cin >> namaPlaylist;
+
+    adrPlaylist p = U->firstPlaylist;
+    bool found = false;
+
+    while (p != nullptr) {
+        if (p->namaPlaylist == namaPlaylist) {
+            addSongToPlaylist(p, songToAdd);
+            cout << "Lagu \"" << songToAdd->title
+                 << "\" berhasil ditambahkan ke playlist \""
+                 << namaPlaylist << "\".\n";
+            found = true;
+            break;
+        }
+        p = p->next;
+    }
+
+    if (!found) {
+        cout << "Playlist tidak ditemukan.\n";
+    }
+
+    tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
+
+    } else if (user == 9){
+        showHistory(h);
+        tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist, h);
+    }
+    else if (user == 0){
         return;
     }
 }
