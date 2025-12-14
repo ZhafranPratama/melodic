@@ -89,6 +89,7 @@ void deleteSongFromList(songList &L, adrSong p);
 void deleteSongInAllPlaylists(userList &L, adrSong song);
 void deleteSongByTitle(userList &L, songList &S, string title, adrSong &s,history &h);
 void deletePlaylistByName(adrUser &user, string namaPlaylist);
+void deleteSongInPlaylist(adrPlaylist &p, string title);
 void editSongByTitle(songList &L, userList &U, string title , adrSong &s, history &h);
 void printAllSongs(songList L);
 void displayUserList(userList L);

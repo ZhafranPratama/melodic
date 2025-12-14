@@ -542,6 +542,35 @@ void displaySongsInPlaylist(adrPlaylist playlist) {
     }
 }
 
+void deleteSongInPlaylist(adrPlaylist &p, string title) {
+    adrRelation r = p->firstSong;
+    adrRelation q;
+    while (r != nullptr){
+        if (r->Song->title == title) {
+            if (r = p->firstSong){
+                q = r;
+                r = r->next;
+                p->firstSong = q->next;
+                q->next = nullptr;
+                p->firstSong->prev = nullptr;
+            } else if (r->next = nullptr) {
+                q = r;
+                r = r->next;
+                q->prev->next = nullptr;
+                q->prev = nullptr;
+            } else {
+                q = r;
+                r = r->next;
+                q->prev->next = q->next;
+                q->next->prev = q->prev;
+                q->next = nullptr;
+                q->prev = nullptr;
+            }
+        } else {
+            r = r->next;
+        }
+    }
+}
 
 void addSongToPlaylist(adrPlaylist &playlist, adrSong song) {
     adrRelation r;
