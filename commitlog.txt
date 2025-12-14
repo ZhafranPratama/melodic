@@ -1,0 +1,57 @@
+c1b2617 (HEAD -> main, origin/main, origin/japran, japran) adding more info to readme file
+eebc97b adding feature for next similar song
+babcfc0 fixing some issue in deleteSongInPlaylist
+a45ee40 adding deleteSongInPlaylist function
+5a9980e (origin/misel) edit tampilan user
+733c492 adding add and delete playlist in user menu
+af31156 adding history, and fixing some display issue
+c1b2617 (HEAD -> main, origin/main, origin/japran, japran) adding more info to readme file
+eebc97b adding feature for next similar song
+babcfc0 fixing some issue in deleteSongInPlaylist
+a45ee40 adding deleteSongInPlaylist function
+5a9980e (origin/misel) edit tampilan user
+733c492 adding add and delete playlist in user menu
+af31156 adding history, and fixing some display issue
+c1b2617 (HEAD -> main, origin/main, origin/japran, japran) adding more info to readme file
+eebc97b adding feature for next similar song
+babcfc0 fixing some issue in deleteSongInPlaylist
+a45ee40 adding deleteSongInPlaylist function
+5a9980e (origin/misel) edit tampilan user
+733c492 adding add and delete playlist in user menu
+af31156 adding history, and fixing some display issue
+e127e05 adding next prev and current play song
+f099bd7 fixing minor bugs and fixing some issue with the view of the app
+3f175f8 fixing view and adding more dummy data
+2a3f443 latest merge
+f11ad15 adding display for current playing song
+e38f7ab edit tampilan user
+9884452 fixing minor issue in login, and admin view
+42243ae latest merge
+b8db30a merge between branch japran and misel
+550da00 adding login, search user, fav song, and song recomendation feature
+a2f313e (misel) ubah adt
+01b75c4 adding login, searcByUsn, favSong, and songRecomendation feature
+58d6360 adding login, search by username, favorite song, and song recomendation feature
+ee76cb2 tampilan user dan main
+a8267c1 Merge pull request #8 from ZhafranPratama/japran
+49916d9 Merge pull request #7 from ZhafranPratama/misel
+2eb99ae menambahkan lagu kedalam playlist
+f1a7d46 menambhakna procedure hapus playlist, display user, song, playlist
+007e85b menambahkan fitur delete lagu diadmin juga kehapus di user
+526e4f7 add serach song dan delete song by title
+25c74d6 Merge pull request #6 from ZhafranPratama/japran
+88f9f8e Merge pull request #5 from ZhafranPratama/misel
+9d71b45 creat addsong
+18c246c Merge pull request #4 from ZhafranPratama/japran
+c67d16c Merge pull request #3 from ZhafranPratama/misel
+4395d00 creat list & createlementsong
+2a1075a Merge pull request #2 from ZhafranPratama/japran
+ee089b6 adding primitive for  mll 1-n function
+e708915 Merge pull request #1 from ZhafranPratama/japran
+c8e685a branch testing
+823dd22 edit README file
+2101c84 edit README file
+2c04875 adding README file
+bade72c first commit
+eaeecb3 first commit
+(END)
