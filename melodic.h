@@ -108,5 +108,7 @@ void prevSongList(adrSong &current, songList S);
 void playSongFromPlaylist(adrPlaylist playlist, adrRelation &current, string title);
 void nextPlaylistSong(adrRelation &current);
 void prevPlaylistSong(adrRelation &current);
+adrSong peekNextSimilar(adrSong current, songList L);
+adrSong peekPrevSimilar(adrSong current, songList L);
 
 #endif

@@ -668,13 +668,57 @@ void statusPlay(bool isPlaylist, adrSong S, adrRelation R, songList L) {
             cout << "Next Song    : " << "None" << endl;
         }else {
         cout << "Prev Song    : " 
-             << (S->prev == nullptr ? L.last->title : S->prev->title) << endl;
+             << (peekPrevSimilar(S, L)->title) << endl;
         cout << "Current Song : " << (S == nullptr ? "None" : S->title) << endl;
         cout << "Next Song    : " 
-             << (S->next == nullptr ? L.first->title : S->next->title) << endl;
+             << (peekNextSimilar(S, L)->title) << endl;
         }
     }
     cout << "------------------------------------------------------------\n";
+}
+
+adrSong peekNextSimilar(adrSong current, songList L) {
+    if (!current || !L.first) return nullptr;
+
+    string genreTarget = current->genre;
+
+    adrSong p = current->next;
+    while (p != nullptr) {
+        if (p->genre == genreTarget)
+            return p;
+        p = p->next;
+    }
+
+    p = L.first;
+    while (p != current) {
+        if (p->genre == genreTarget)
+            return p;
+        p = p->next;
+    }
+
+    return current;
+}
+
+adrSong peekPrevSimilar(adrSong current, songList L) {
+    if (!current || !L.last) return nullptr;
+
+    string genreTarget = current->genre;
+
+    adrSong p = current->prev;
+    while (p != nullptr) {
+        if (p->genre == genreTarget)
+            return p;
+        p = p->prev;
+    }
+
+    p = L.last;
+    while (p != current) {
+        if (p->genre == genreTarget)
+            return p;
+        p = p->prev;
+    }
+
+    return current;
 }
 
 void playSongFromList(songList L, adrSong &current, string title) {
@@ -703,18 +747,52 @@ void playSongFromList(songList L, adrSong &current, string title) {
 }
 
 void nextSongList(adrSong &current, songList S) {
-    if (current != nullptr && current->next != nullptr) {
-        current = current->next;
-    } else if (current == nullptr || current->next == nullptr) {
+    if (S.first == nullptr) return;
+    if (current == nullptr) {
         current = S.first;
+        return;
+    }
+    string genreTarget = current->genre;
+    adrSong p = current->next;
+    while (p != nullptr) {
+        if (p->genre == genreTarget) {
+            current = p;
+            return;
+        }
+        p = p->next;
+    }
+    p = S.first;
+    while (p != current) {
+        if (p->genre == genreTarget) {
+            current = p;
+            return;
+        }
+        p = p->next;
     }
 }
 
 void prevSongList(adrSong &current, songList S) {
-    if (current != nullptr && current->prev != nullptr) {
-        current = current->prev;
-    } else if (current == nullptr || current->prev == nullptr) {
+    if (S.last == nullptr) return;
+    if (current == nullptr) {
         current = S.last;
+        return;
+    }
+    string genreTarget = current->genre;
+    adrSong p = current->prev;
+    while (p != nullptr) {
+        if (p->genre == genreTarget) {
+            current = p;
+            return;
+        }
+        p = p->prev;
+    }
+    p = S.last;
+    while (p != current) {
+        if (p->genre == genreTarget) {
+            current = p;
+            return;
+        }
+        p = p->prev;
     }
 }
 
