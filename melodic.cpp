@@ -835,8 +835,10 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                 cout << "============================================================\n";
                 cout << "Apa Yang Ingin Anda Lakukan\n";
                 cout << "1. Melihat Lagu dalam PlayList\n";
-                cout << "2. Back To Menu\n";
-                cout << "Masukkan (1/2): ";
+                cout << "2. Menambah PlayList\n";
+                cout << "3. Menghapus PlayList\n";
+                cout << "4. Back To Menu\n";
+                cout << "Masukkan (1 - 4): ";
                 cin >> a;
                 cout << "============================================================\n";
                 
@@ -885,7 +887,28 @@ void tampilanUser(songList &L, adrUser &U, adrSong &S, adrRelation &currentSongP
                             }
                     }       
 
-        }else if(a ==2){
+        }else if (a == 2){
+                cout << "Masukkan nama playlist baru:\n";
+            cin >> namaPlaylist;
+
+                adrPlaylist newP = createElemenPlaylist(namaPlaylist);
+                addPlaylist(U, newP);
+                cout << "Playlist \"" << namaPlaylist << "\" berhasil ditambahkan.\n";
+
+            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist, h);
+        }else if (a == 3) {
+            cout << "Masukkan nama playlist yang ingin dihapus:\n";
+            cin >> namaPlaylist;
+
+            if (namaPlaylist == "Favorite Song") {
+                cout << "Playlist Favorite Song tidak dapat dihapus.\n";
+            } else {
+                deletePlaylistByName(U, namaPlaylist);
+            }
+
+            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist, h);
+    }
+        else if(a == 4){
            tampilanUser(L, U, S, currentSongPlaylist, currentSongList, isPlaylist,h);
 
         }
